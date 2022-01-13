@@ -1,24 +1,27 @@
-import Button from "./Button";
-import styles from "./App.module.css";
-import { useState, useEffect } from "react";
-
-function Hello() {
-  useEffect(() => {
-    console.log("created");
-    return () => console.log("destroyed"); //Cleanup
-  }, []);
-  return <h1>Hi</h1>;
-}
+import { useState } from "react/cjs/react.development";
 
 function App() {
-  const [show, setShow] = useState(false);
-  const onClick = () => {
-    setShow((prev) => !prev);
+  const [todo, setTodo] = useState("");
+  const [todoArray, setTodoArray] = useState([]);
+  const onChange = (event) => setTodo(event.target.value);
+  const onSubmit = (event) => {
+    event.preventDefault();
+    setTodoArray((prevArray) => [todo, ...prevArray]);
+    setTodo("");
   };
   return (
     <div>
-      {show ? <Hello /> : null}
-      <Button text={show ? "hide" : "show"} click={onClick} />
+      <h1>todo list</h1>
+      <form onSubmit={onSubmit}>
+        <input onChange={onChange} value={todo} type="text" placeholder="write your to do"></input>
+        <button>click</button>
+      </form>
+      <hr />
+      <ul>
+        {todoArray.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
     </div>
   );
 }

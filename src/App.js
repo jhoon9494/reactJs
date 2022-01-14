@@ -1,57 +1,45 @@
-import { useEffect, useState } from "react/cjs/react.development";
+import { useEffect } from "react";
+import { useState } from "react/cjs/react.development";
+import styles from "./App.module.css";
 
 function App() {
-  const [load, setLoad] = useState(true);
-  const [coins, setCoins] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [movies, setMovies] = useState([]);
+  const getMovies = async () => {
+    const json = await (await fetch("https://yts.mx/api/v2/list_movies.json?minimum_rating=8.8&sort_by=year")).json();
+    setMovies(json.data.movies);
+    setLoading((prev) => !prev);
+  };
+
   useEffect(() => {
-    fetch("https://api.coinpaprika.com/v1/tickers")
-      .then((response) => response.json())
-      .then((data) => {
-        setCoins(data);
-        setLoad(false);
-      });
+    getMovies(); //fetch().then() 대신에 function async, await을 사용하면 코드를 간결하게 사용할 수 있음.
+    // fetch("https://yts.mx/api/v2/list_movies.json?minimum_rating=8.8&sort_by=year")
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     setMovies(data.data.movies);
+    //     setLoading((prev) => !prev);
+    //   });
   }, []);
-
-  const [money, setMoney] = useState(0);
-  const inputMoney = (event) => {
-    setMoney(event.target.value);
-  };
-  const [selected, setSelected] = useState("select coin!");
-  const selectedOpt = (event) => {
-    setSelected(event.target.value);
-  };
-
-  const [hide, setHide] = useState(true); //계산 결과 숨기기/표시하기
-  const onClick = () => {
-    if (money > 0 && selected !== "select coin!") {
-      setHide(false);
-    }
-  };
-
   return (
     <div>
-      <h1>The Coins!({coins.length})</h1>
-      {load ? (
-        <strong>loading...</strong>
+      {loading ? (
+        <h2>Loading...</h2>
       ) : (
-        <div>
-          <select onChange={selectedOpt} value={selected}>
-            <option>select coin!</option>
-            {coins.map((item) => (
-              <option key={item.id}>
-                {item.name} ({item.symbol}) : ${item.quotes.USD.price}
-              </option>
-            ))}
-          </select>
-          <hr />
-          <span>보유 금액($): </span>
-          <input type="number" placeholder="write your money" value={money} onChange={inputMoney}></input>
-          <button onClick={onClick}>계산</button>
-          {hide ? null : (
-            <h2>{`$${money}로 
-            ${selected.substring(selected.indexOf("("), selected.indexOf(")") + 1)}코인을 
-            ${money / selected.substring(selected.indexOf("$") + 1)}개 살 수 있습니다.`}</h2>
-          )}
+        <div className={styles.container}>
+          {movies.map((movie) => {
+            return (
+              <div className={styles.box} key={movie.id}>
+                <img alt={movie.title} src={movie.medium_cover_image}></img>
+                <h2>{movie.title}</h2>
+                <p>{movie.summary}</p>
+                <ul>
+                  {movie.genres.map((genre) => {
+                    return <li key={genre}>{genre}</li>;
+                  })}
+                </ul>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

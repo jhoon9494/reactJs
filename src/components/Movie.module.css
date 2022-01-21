@@ -1,0 +1,24 @@
+.container {
+  border: 2px solid gray;
+  border-radius: 10px;
+  padding: 5px;
+  margin: 10px;
+  width: 15rem;
+  display: flex;
+  flex-direction: column;
+  color: gray;
+}
+
+.container h2 {
+  text-align: center;
+}
+
+.container h2 a:-webkit-any-link {
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+}
+
+.container h2 a:hover {
+  color: rgb(52, 107, 173);
+}

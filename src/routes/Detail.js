@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from "react";
-import { useState } from "react/cjs/react.development";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import styles from "./Detail.module.css";
 import { Link } from "react-router-dom";
